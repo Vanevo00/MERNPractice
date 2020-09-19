@@ -4,6 +4,7 @@ const users = require('./routes/api/users')
 const profile = require('./routes/api/profile')
 const posts = require('./routes/api/posts')
 const bodyParser = require('body-parser')
+const passport = require('passport')
 
 const port = process.env.PORT || 5555
 
@@ -11,6 +12,9 @@ const app = express()
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
+app.use(passport.initialize())
+
+require('./config/passport')(passport)
 
 connectDB()
 

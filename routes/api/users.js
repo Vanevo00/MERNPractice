@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs')
 const User = require('../models/User')
 const jwt = require('jsonwebtoken')
 const keys = require('../../config/keys')
+const passport = require('passport')
 
 // @route GET api/users/test
 // @desc test route
@@ -13,7 +14,7 @@ router.get('/test', (req, res) => res.json({
   message: 'test successful'
 }))
 
-// @route GET api/users/register
+// @route POST api/users/register
 // @desc register a user
 // @access public
 router.post('/register', async(req, res) => {
@@ -55,7 +56,7 @@ router.post('/register', async(req, res) => {
   })
 })
 
-// @route GET api/users/login
+// @route POST api/users/login
 // @desc login a user, return the JWT token
 // @access public
 router.post('/login', async (req, res) => {
@@ -86,6 +87,26 @@ router.post('/login', async (req, res) => {
   } else {
     return res.status(400).json({ password: 'Incorrect' })
   }
+})
+
+
+// @route GET api/users/current
+// @desc Return current user
+// @access private
+router.get('/current', passport.authenticate('jwt', { session: false }), (req, res) => {
+  const {
+    user: {
+      id,
+      name,
+      email
+    }
+  } = req
+
+  res.json({
+    id,
+    name,
+    email
+  })
 })
 
 module.exports = router
