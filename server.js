@@ -1,7 +1,11 @@
 const express = require('express')
+const connectDB = require('./utils/connectDB')
+
+const port = process.env.PORT || 5555
 
 const app = express()
-const port = process.env.PORT || 5555
+
+connectDB()
 
 app.get('/', (req, res) => res.send('welcome'))
 
