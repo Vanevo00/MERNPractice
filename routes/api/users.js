@@ -3,6 +3,8 @@ const router = express.Router()
 const gravatar = require('gravatar')
 const bcrypt = require('bcryptjs')
 const User = require('../models/User')
+const jwt = require('jsonwebtoken')
+const keys = require('../../config/keys')
 
 // @route GET api/users/test
 // @desc test route
@@ -69,7 +71,18 @@ router.post('/login', async (req, res) => {
 
   const passwordsMatch = await bcrypt.compare(password, foundUser.password)
   if (passwordsMatch) {
-    res.json({message: 'success'})
+    const payload = {
+      id: foundUser.id,
+      name: foundUser.name,
+      avatar: foundUser.avatar
+    }
+
+    jwt.sign(payload, keys.jwtSecret, { expiresIn: 3600 * 24 }, (err, token) => {
+      res.json({
+        success: true,
+        token: `Bearer ${token}`
+      })
+    })
   } else {
     return res.status(400).json({ password: 'Incorrect' })
   }
