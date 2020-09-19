@@ -53,4 +53,26 @@ router.post('/register', async(req, res) => {
   })
 })
 
+// @route GET api/users/login
+// @desc login a user, return the JWT token
+// @access public
+router.post('/login', async (req, res) => {
+  const {
+    body: {
+      email,
+      password
+    }
+  } = req
+
+  const foundUser = await User.findOne({ email })
+  if (!foundUser) return res.status(404).json({ email: 'User not found' })
+
+  const passwordsMatch = await bcrypt.compare(password, foundUser.password)
+  if (passwordsMatch) {
+    res.json({message: 'success'})
+  } else {
+    return res.status(400).json({ password: 'Incorrect' })
+  }
+})
+
 module.exports = router
