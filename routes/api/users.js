@@ -6,6 +6,7 @@ const User = require('../models/User')
 const jwt = require('jsonwebtoken')
 const keys = require('../../config/keys')
 const passport = require('passport')
+const validateRegisterInput = require('../../validation/register')
 
 // @route GET api/users/test
 // @desc test route
@@ -18,6 +19,9 @@ router.get('/test', (req, res) => res.json({
 // @desc register a user
 // @access public
 router.post('/register', async(req, res) => {
+  const { errors, isValid } = validateRegisterInput(req.body)
+  if (!isValid) return res.status(400).json(errors)
+
   const {
     body: {
       name,
