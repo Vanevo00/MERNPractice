@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken')
 const keys = require('../../config/keys')
 const passport = require('passport')
 const validateRegisterInput = require('../../validation/register')
+const validateLoginInput = require('../../validation/login')
 
 // @route GET api/users/test
 // @desc test route
@@ -31,7 +32,10 @@ router.post('/register', async(req, res) => {
   } = req
 
   const existingUser = await User.findOne({ email })
-  if (existingUser) return res.status(400).json({ email: 'Email already exists' })
+  if (existingUser) {
+    errors.email = 'Email already exists'
+    return res.status(400).json({ errors })
+  }
 
   const avatar = gravatar.url(email, {
     s: '200',
@@ -64,6 +68,9 @@ router.post('/register', async(req, res) => {
 // @desc login a user, return the JWT token
 // @access public
 router.post('/login', async (req, res) => {
+  const { errors, isValid } = validateLoginInput(req.body)
+  if (!isValid) return res.status(400).json(errors)
+
   const {
     body: {
       email,
@@ -72,7 +79,10 @@ router.post('/login', async (req, res) => {
   } = req
 
   const foundUser = await User.findOne({ email })
-  if (!foundUser) return res.status(404).json({ email: 'User not found' })
+  if (!foundUser) {
+    errors.email = 'User not found'
+    return res.status(404).json({ errors })
+  }
 
   const passwordsMatch = await bcrypt.compare(password, foundUser.password)
   if (passwordsMatch) {
@@ -89,7 +99,8 @@ router.post('/login', async (req, res) => {
       })
     })
   } else {
-    return res.status(400).json({ password: 'Incorrect' })
+    errors.password = 'Incorrect password'
+    return res.status(400).json({ errors })
   }
 })
 
