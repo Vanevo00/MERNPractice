@@ -1,6 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const passport = require('passport')
+const validateProfileInput = require('../../validation/profile')
 
 const Profile = require('../models/Profile')
 const User = require('../models/User')
@@ -27,7 +28,7 @@ router.get('/', passport.authenticate('jwt', { session: false }), async (req, re
 
     const errors = {}
 
-    const foundProfile = await Profile.findOne({ user: id })
+    const foundProfile = await Profile.findOne({ user: id }).populate('user', ['name', 'avatar'])
     if (!foundProfile) {
       errors.noprofile = 'There is no profile for this user'
       return res.status(404).json(errors)
@@ -43,6 +44,9 @@ router.get('/', passport.authenticate('jwt', { session: false }), async (req, re
 // @desc create or edit user profile
 // @access private
 router.post('/', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  const { errors, isValid } = validateProfileInput(req.body)
+  if (!isValid) return res.status(400).json(errors)
+
   try {
     const {
       user: {
@@ -83,7 +87,7 @@ router.post('/', passport.authenticate('jwt', { session: false }), async (req, r
     if (linkedin) profileFields.social.linkedin = linkedin
     if (instagram) profileFields.social.instagram = instagram
 
-    const foundProfile = await Profile.findOne({ profile: id })
+    const foundProfile = await Profile.findOne({ user: id })
     if (foundProfile) {
       const updatedProfile = await foundProfile.update(
         { $set: profileFields },
@@ -93,11 +97,12 @@ router.post('/', passport.authenticate('jwt', { session: false }), async (req, r
     } else {
       const profileHandleFound = await Profile.findOne({ handle: profileFields.handle })
       if (profileHandleFound) {
-        errors.handle = 'Handle already exists '
+        errors.handle = 'Handle already exists'
+        res.status(400).json(errors)
       }
-      res.status(400).json(errors)
 
-      const createdProfile = await new Profile(profileFields).save()
+      const createdProfile = await new Profile(profileFields)
+      createdProfile.save()
       res.json(createdProfile)
     }
 
