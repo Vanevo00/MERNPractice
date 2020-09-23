@@ -40,6 +40,77 @@ router.get('/', passport.authenticate('jwt', { session: false }), async (req, re
   }
 })
 
+// @route GET api/profile/all
+// @desc get all profiles
+// @access public
+router.get('/all', async (req, res) => {
+  try {
+    const profiles = await Profile.find().populate('user', ['name', 'avatar'])
+    const errors = {}
+
+    if (!profiles) {
+      errors.noprofile = 'There are no profiles'
+      return res.status(404).json(errors)
+    }
+
+    res.json(profiles)
+  } catch(err) {
+    console.error(err)
+  }
+})
+
+// @route GET api/profile/user/:id
+// @desc get profile by user id
+// @access public
+router.get('/user/:id', async (req, res) => {
+  try {
+    const {
+      params: {
+        id
+      }
+    } = req
+
+    const errors = {}
+
+    const foundProfile = await Profile.findOne({ user: id }).populate('user', ['name', 'avatar'])
+    if (!foundProfile) {
+      errors.noprofile = 'There is no profile for this user'
+      res.status(404).json(errors)
+    }
+
+    res.json(foundProfile)
+
+  } catch(err) {
+    console.errror(err)
+  }
+})
+
+// @route GET api/profile/handle/:handle
+// @desc get profile by handle
+// @access public
+router.get('/handle/:handle', async (req, res) => {
+  try {
+    const {
+      params: {
+        handle
+      }
+    } = req
+
+    const errors = {}
+
+    const foundProfile = await Profile.findOne({ handle }).populate('user', ['name', 'avatar'])
+    if (!foundProfile) {
+      errors.noprofile = 'There is no profile for this user'
+      res.status(404).json(errors)
+    }
+
+    res.json(foundProfile)
+
+  } catch(err) {
+    console.error(err)
+  }
+})
+
 // @route POST api/profile/
 // @desc create or edit user profile
 // @access private
