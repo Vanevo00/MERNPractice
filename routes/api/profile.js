@@ -270,4 +270,92 @@ router.post('/education', passport.authenticate('jwt', { session: false }), asyn
   }
 })
 
+// @route DELETE api/profile/experience/:id
+// @desc delete experience from a profile
+// @access private
+router.delete('/experience/:id', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  try {
+    const {
+      user: {
+        id
+      },
+      params: {
+        id: expId
+      }
+    } = req
+
+    const errors = {}
+
+    const userProfile = await Profile.findOne({ user: id })
+
+    const removeIndex = userProfile.experience.map(item => item.id).indexOf(expId)
+
+    if (removeIndex < 0) {
+      errors.experience = 'experience id does not exist'
+      return res.status(404).json(errors)
+    }
+
+    userProfile.experience.splice(removeIndex, 1)
+    await userProfile.save()
+    res.json(userProfile)
+  } catch(err) {
+    console.error(err)
+  }
+})
+
+// @route DELETE api/profile/education/:id
+// @desc delete education from a profile
+// @access private
+router.delete('/education/:id', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  try {
+    const {
+      user: {
+        id
+      },
+      params: {
+        id: eduId
+      }
+    } = req
+
+    const errors = {}
+
+    const userProfile = await Profile.findOne({ user: id })
+
+    const removeIndex = userProfile.education.map(item => item.id).indexOf(eduId)
+
+    if (removeIndex < 0) {
+      errors.education = 'education id does not exist'
+      return res.status(404).json(errors)
+    }
+
+    userProfile.education.splice(removeIndex, 1)
+    await userProfile.save()
+    res.json(userProfile)
+  } catch(err) {
+    console.error(err)
+  }
+})
+
+// @route DELETE api/profile/
+// @desc delete user and profile
+// @access private
+router.delete('/', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  try {
+    const {
+      user: {
+        id
+      }
+    } = req
+
+    await Profile.findOneAndRemove({ user: id })
+    await User.findOneAndRemove({ _id: id })
+    res.json({ Success: true })
+  } catch (err) {
+    console.error(err)
+  }
+
+})
+
+
+
 module.exports = router
