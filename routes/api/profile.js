@@ -2,6 +2,8 @@ const express = require('express')
 const mongoose = require('mongoose')
 const passport = require('passport')
 const validateProfileInput = require('../../validation/profile')
+const validateExperienceInput = require('../../validation/experience')
+const validateEducationInput = require('../../validation/education')
 
 const Profile = require('../models/Profile')
 const User = require('../models/User')
@@ -177,6 +179,92 @@ router.post('/', passport.authenticate('jwt', { session: false }), async (req, r
       res.json(createdProfile)
     }
 
+  } catch(err) {
+    console.error(err)
+  }
+})
+
+// @route POST api/profile/experience
+// @desc add experience to a profile
+// @access private
+router.post('/experience', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  const { errors, isValid } = validateExperienceInput(req.body)
+  if (!isValid) return res.status(400).json(errors)
+
+  try {
+    const {
+      user: {
+        id
+      },
+      body: {
+        title,
+        company,
+        location,
+        from,
+        to,
+        current,
+        description
+      }
+    } = req
+
+    const userProfile = await Profile.findOne({ user: id })
+
+    const newExp = {
+      title,
+      company,
+      location,
+      from,
+      to,
+      current,
+      description
+    }
+
+    userProfile.experience.unshift(newExp)
+    await userProfile.save()
+    res.json(userProfile)
+  } catch(err) {
+    console.error(err)
+  }
+})
+
+// @route POST api/profile/education
+// @desc add education to a profile
+// @access private
+router.post('/education', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  const { errors, isValid } = validateEducationInput(req.body)
+  if (!isValid) return res.status(400).json(errors)
+
+  try {
+    const {
+      user: {
+        id
+      },
+      body: {
+        school,
+        degree,
+        fieldofstudy,
+        from,
+        to,
+        current,
+        description
+      }
+    } = req
+
+    const userProfile = await Profile.findOne({ user: id })
+
+    const newEdu = {
+      school,
+      degree,
+      fieldofstudy,
+      from,
+      to,
+      current,
+      description
+    }
+
+    userProfile.education.unshift(newEdu)
+    await userProfile.save()
+    res.json(userProfile)
   } catch(err) {
     console.error(err)
   }
