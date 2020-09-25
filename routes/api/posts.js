@@ -2,6 +2,7 @@ const express = require ('express')
 const mongoose = require('mongoose')
 const passport = require('passport')
 const Post = require('../models/Post')
+const Profile = require('../models/Profile')
 const validatePostInput = require('../../validation/post')
 
 const router = express.Router()
@@ -72,6 +73,40 @@ router.post('/', passport.authenticate('jwt', { session: false }), async (req, r
   } catch(err) {
     console.log(err)
   }
+})
+
+// @route DELETE api/posts/:id
+// @desc delete post with id
+// @access private
+router.delete('/:id', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  try {
+    const {
+      user: {
+        id: userId
+      },
+      params: {
+        id: postId
+      }
+    } = req
+
+    const [profile, post] = await Promise.all([
+      Profile.findOne({ user: userId }),
+      Post.findById(postId)
+    ])
+
+    if (!post) res.status(404).json({ nopostfound: 'no post with that id found.'})
+
+    if (post.user.toString() !== userId) {
+      res.status(401).json({ notauthorized: 'user not authorized'})
+    }
+
+    await post.remove()
+    res.json({ success: true })
+  } catch(err) {
+    console.log(err)
+  }
+
+
 })
 
 module.exports = router
