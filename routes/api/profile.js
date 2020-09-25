@@ -1,5 +1,4 @@
 const express = require('express')
-const mongoose = require('mongoose')
 const passport = require('passport')
 const validateProfileInput = require('../../validation/profile')
 const validateExperienceInput = require('../../validation/experience')
