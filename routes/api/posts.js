@@ -13,7 +13,35 @@ router.get('/test', (req, res) => res.json({
   message: 'test successful'
 }))
 
-// @route Post api/posts
+// @route GET api/posts
+// @desc get posts
+// @access public
+router.get('/', async (req, res) => {
+  try {
+    const posts = await Post
+      .find()
+      .sort({ date: -1 })
+    if (!posts) res.status(404).json({ nopostsfound: 'no posts found.' })
+    res.json(posts)
+  } catch(err) {
+    console.log(err)
+  }
+})
+
+// @route GET api/posts/:id
+// @desc get post by id
+// @access public
+router.get('/:id', async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id)
+    if (!post) res.status(404).json({ nopostfound: 'no post with that id found.' })
+    res.json(post)
+  } catch(err) {
+    console.log(err)
+  }
+})
+
+// @route POST api/posts
 // @desc create a post
 // @access private
 router.post('/', passport.authenticate('jwt', { session: false }), async (req, res) => {
