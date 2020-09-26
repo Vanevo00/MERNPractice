@@ -1,8 +1,6 @@
 const express = require ('express')
-const mongoose = require('mongoose')
 const passport = require('passport')
 const Post = require('../models/Post')
-const Profile = require('../models/Profile')
 const validatePostInput = require('../../validation/post')
 
 const router = express.Router()
@@ -89,10 +87,7 @@ router.delete('/:id', passport.authenticate('jwt', { session: false }), async (r
       }
     } = req
 
-    const [profile, post] = await Promise.all([
-      Profile.findOne({ user: userId }),
-      Post.findById(postId)
-    ])
+    const post = await Post.findById(postId)
 
     if (!post) res.status(404).json({ nopostfound: 'no post with that id found.'})
 
