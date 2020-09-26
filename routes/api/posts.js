@@ -170,4 +170,75 @@ router.post('/unlike/:id', passport.authenticate('jwt', { session: false }), asy
   }
 })
 
+// @route POST api/posts/comment/:id
+// @desc Add comment to post
+// @access private
+router.post('/comment/:id', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  const { errors, isValid } = validatePostInput(req.body)
+  if (!isValid) return res.status(400).json(errors)
+
+  try {
+    const {
+      params: {
+        id
+      },
+      body: {
+        text,
+        name,
+        avatar,
+      },
+      user: {
+        id: userId
+      }
+    } = req
+
+    const post = await Post.findById(id)
+
+    if (!post) return res.status(404).json({ nopostfound: 'no post with that id found' })
+
+    const newComment = {
+      text,
+      name,
+      avatar,
+      user: userId
+    }
+
+    post.comments.push(newComment)
+    await post.save()
+    res.json(post)
+  } catch(err) {
+    console.log(err)
+  }
+})
+
+// @route DELETE api/posts/comment/:id/:commentId
+// @desc Delete a comment of a post
+// @access private
+router.delete('/comment/:id/:commentId', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  try {
+    const {
+      params: {
+        id,
+        commentId
+      },
+      user: {
+        id: userId
+      }
+    } = req
+
+    const post = await Post.findById(id)
+    if (!post) return res.status(404).json({ nopostfound: 'no post with that id found' })
+
+    const selectedCommentArr = post.comments.filter((comment) => commentId === comment._id.toString())
+    if (selectedCommentArr.length < 1) return res.status(404).json({ nocommentfound: 'no comment with that id found' })
+    if (selectedCommentArr[0].user.toString() !== userId) return res.status(401).json({ unauthorized: 'unauthorized to delete this comment' })
+
+    post.comments = post.comments.filter((comment) => commentId !== comment._id.toString())
+    await post.save()
+    res.json({ success: true })
+  } catch(err) {
+    console.log(err)
+  }
+})
+
 module.exports = router
