@@ -100,8 +100,74 @@ router.delete('/:id', passport.authenticate('jwt', { session: false }), async (r
   } catch(err) {
     console.log(err)
   }
+})
 
+// @route POST api/posts/like/:id
+// @desc Like post
+// @access private
+router.post('/like/:id', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  try {
+    const {
+      user: {
+        id: userId
+      },
+      params: {
+        id: postId
+      }
+    } = req
 
+    const post = await Post.findById(postId)
+
+    if (!post) res.status(404).json({ nopostfound: 'no post with that id found.'})
+
+    const userAlreadyLikedPost = () => post.likes.filter((like) => like.user.toString() === userId).length > 0
+
+    if (userAlreadyLikedPost()) return res.status(400).json({ alreadyliked: 'user already liked this post'})
+
+    post.likes.push({ user: userId })
+    await post.save()
+    res.json(post)
+  } catch(err) {
+    console.log(err)
+  }
+})
+
+// @route POST api/posts/unlike/:id
+// @desc Unlike post
+// @access private
+router.post('/unlike/:id', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  try {
+    const {
+      user: {
+        id: userId
+      },
+      params: {
+        id: postId
+      }
+    } = req
+
+    const post = await Post.findById(postId)
+
+    if (!post) res.status(404).json({ nopostfound: 'no post with that id found.'})
+
+    console.log("userId", userId)
+
+    const userDidNotLikePost = () => post.likes.filter((like) => like.user.toString() === userId).length === 0
+
+    if (userDidNotLikePost()) res.status(400).json({ didnotlike: 'user did not like this post'})
+
+    post.likes = post.likes.filter((like) => {
+      console.log('like.user', like.user)
+      console.log('userId', userId)
+
+      return like.user.toString() !== userId
+    })
+    console.log("post.likes", post.likes)
+    await post.save()
+    res.json(post)
+  } catch(err) {
+    console.log(err)
+  }
 })
 
 module.exports = router
