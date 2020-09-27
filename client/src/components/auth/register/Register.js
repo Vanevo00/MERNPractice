@@ -1,14 +1,15 @@
 import React, { useState } from 'react'
-import axios from 'axios'
+import { connect } from 'react-redux'
+import { registerUser } from '../../../actions/authActions'
+import { withRouter } from 'react-router-dom'
 
-const Register = () => {
+const Register = ({ registerUser, auth, errors, history }) => {
   const [inputValues, setInputValues] = useState({
     name: '',
     email: '',
     password: '',
     password2: '',
   })
-  const [errors, setErrors] = useState({})
 
   const onChange = (e) => {
     setInputValues({
@@ -19,13 +20,7 @@ const Register = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault()
-
-    try {
-      const res = await axios.post('/api/users/register', inputValues)
-      console.log(res.data)
-    } catch(err) {
-      setErrors(err.response.data)
-    }
+    registerUser(inputValues, history)
   }
 
   return (
@@ -91,4 +86,9 @@ const Register = () => {
   )
 }
 
-export default Register
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+  errors: state.errors
+})
+
+export default connect(mapStateToProps, { registerUser })(withRouter(Register))
