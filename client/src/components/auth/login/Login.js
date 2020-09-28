@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { loginUser } from '../../../actions/authActions'
+import TextFieldGroup from '../../common/TextFieldGroup'
 
 const Login = ({ loginUser, auth, errors, history }) => {
   const [inputValues, setInputValues] = useState({
@@ -31,25 +32,24 @@ const Login = ({ loginUser, auth, errors, history }) => {
             <p className="lead text-center">Sign in to your DevConnector account</p>
             <form onSubmit={onSubmit}>
               <div className="form-group">
-                <input
-                  type="email"
-                  className={`form-control form-control-lg ${ errors.email && 'is-invalid' }`}
-                  placeholder="Email Address" name="email"
+                <TextFieldGroup
+                  placeholder='Email Address'
+                  name='email'
+                  type='email'
                   value={inputValues.email}
                   onChange={onChange}
+                  error={errors.email}
                 />
-                { errors.email && <div className='invalid-feedback'>{errors.email}</div>}
               </div>
               <div className="form-group">
-                <input
-                  type="password"
-                  className={`form-control form-control-lg ${ errors.password && 'is-invalid' }`}
-                  placeholder="Password"
-                  name="password"
+                <TextFieldGroup
+                  placeholder='Password'
+                  name='password'
+                  type='password'
                   value={inputValues.password}
                   onChange={onChange}
+                  error={errors.password}
                 />
-                { errors.password && <div className='invalid-feedback'>{errors.password}</div>}
               </div>
               <input type="submit" className="btn btn-info btn-block mt-4"/>
             </form>

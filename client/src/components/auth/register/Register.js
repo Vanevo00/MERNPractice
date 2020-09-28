@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { registerUser } from '../../../actions/authActions'
 import { withRouter } from 'react-router-dom'
+import TextFieldGroup from '../../common/TextFieldGroup'
 
 const Register = ({ registerUser, auth, errors, history }) => {
   const [inputValues, setInputValues] = useState({
@@ -34,50 +35,45 @@ const Register = ({ registerUser, auth, errors, history }) => {
             <p className="lead text-center">Create your DevConnector account</p>
             <form onSubmit={onSubmit}>
               <div className="form-group">
-                <input
-                  type="text"
-                  className={`form-control form-control-lg ${ errors.name && 'is-invalid' }`}
-                  placeholder="Name"
-                  name="name"
+                <TextFieldGroup
+                  placeholder='Name'
+                  name='name'
                   value={inputValues.name}
                   onChange={onChange}
+                  error={errors.name}
                 />
-                { errors.name && <div className='invalid-feedback'>{errors.name}</div>}
               </div>
               <div className="form-group">
-                <input
-                  type="email"
-                  className={`form-control form-control-lg ${ errors.email && 'is-invalid' }`}
-                  placeholder="Email Address"
-                  name="email"
+                <TextFieldGroup
+                  placeholder='Email Address'
+                  name='email'
+                  type='email'
                   value={inputValues.email}
                   onChange={onChange}
+                  error={errors.email}
+                  info='This site uses Gravatar so if you want a profile image, use a
+                  Gravatar email'
                 />
-                { errors.email && <div className='invalid-feedback'>{errors.email}</div>}
-                <small className="form-text text-muted">This site uses Gravatar so if you want a profile image, use a
-                  Gravatar email</small>
               </div>
               <div className="form-group">
-                <input
-                  type="password"
-                  className={`form-control form-control-lg ${ errors.password && 'is-invalid' }`}
-                  placeholder="Password"
-                  name="password"
+                <TextFieldGroup
+                  placeholder='Password'
+                  name='password'
+                  type='password'
                   value={inputValues.password}
                   onChange={onChange}
+                  error={errors.password}
                 />
-                { errors.password && <div className='invalid-feedback'>{errors.password}</div>}
               </div>
               <div className="form-group">
-                <input
-                  type="password"
-                  className={`form-control form-control-lg ${ errors.password2 && 'is-invalid' }`}
-                  placeholder="Confirm Password"
-                  name="password2"
+                <TextFieldGroup
+                  placeholder='Confirm Password'
+                  name='password2'
+                  type='password'
                   value={inputValues.password2}
                   onChange={onChange}
+                  error={errors.password2}
                 />
-                { errors.password2 && <div className='invalid-feedback'>{errors.password2}</div>}
               </div>
               <input type="submit" className="btn btn-info btn-block mt-4"/>
             </form>
