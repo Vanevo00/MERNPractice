@@ -11,6 +11,8 @@ const Register = ({ registerUser, auth, errors, history }) => {
     password2: '',
   })
 
+  if (auth.isAuthenticated) history.push('/dashboard')
+
   const onChange = (e) => {
     setInputValues({
       ...inputValues,

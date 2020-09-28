@@ -1,7 +1,11 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { connect } from 'react-redux'
 
-const Landing = () => {
+const Landing = ({ auth, history }) => {
+  if (auth.isAuthenticated) history.push('/dashboard')
+  console.log(auth.isAuthenticated)
+
   return (
     <div className="landing">
       <div className="dark-overlay landing-inner text-light">
@@ -22,4 +26,8 @@ const Landing = () => {
   )
 }
 
-export default Landing
+const mapStateToProps = (state) => ({
+  auth: state.auth
+})
+
+export default connect(mapStateToProps)(Landing)

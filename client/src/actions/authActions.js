@@ -3,6 +3,13 @@ import axios from 'axios'
 import setAuthToken from '../utils/setAuthToken'
 import jwt_decode from 'jwt-decode'
 
+export const setCurrentUser = (decoded) => {
+  return {
+    type: SET_CURRENT_USER,
+    payload: decoded
+  }
+}
+
 export const registerUser = (userData, history) => async (dispatch) => {
   try {
     await axios.post('/api/users/register', userData)
@@ -35,9 +42,8 @@ export const loginUser = (userData) => async (dispatch) => {
   }
 }
 
-export const setCurrentUser = (decoded) => {
-  return {
-    type: SET_CURRENT_USER,
-    payload: decoded
-  }
+export const logoutUser = () => async (dispatch) => {
+  localStorage.removeItem('jwtToken')
+  setAuthToken(false)
+  dispatch(setCurrentUser({}))
 }
