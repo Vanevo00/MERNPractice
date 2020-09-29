@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 
 const Landing = ({ auth, history }) => {
   if (auth.isAuthenticated) history.push('/dashboard')
-  console.log(auth.isAuthenticated)
 
   return (
     <div className="landing">
