@@ -14,6 +14,7 @@ import setAuthToken from './utils/setAuthToken'
 import { logoutUser, setCurrentUser } from './actions/authActions'
 import { clearProfile } from './actions/profileActions'
 import PrivateRoute from './components/common/PrivateRoute'
+import CreateProfile from './components/create-profile/CreateProfile'
 
 const App = () => {
   const checkForExpiredToken = (decoded) => {
@@ -43,6 +44,9 @@ const App = () => {
             <Route exact path='/login' component={ Login }/>
             <Switch>
               <PrivateRoute exact path='/dashboard' component={ Dashboard }/>
+            </Switch>
+            <Switch>
+              <PrivateRoute exact path='/create-profile' component={ CreateProfile }/>
             </Switch>
           </div>
           <Footer/>
