@@ -28,6 +28,9 @@ const Navbar = ({ auth, logoutUser, clearProfile }) => {
           <img src={user.avatar} alt={user.name} className='rounded-circle' title='you must have a gravatar connected to your email to display an image' style={{ width: '25px', marginRight: '5px'}} />Logout
         </a>
       </li>
+      <li className="nav-item">
+        <Link className="nav-link" to="/dashboard">Dashboard</Link>
+      </li>
     </ul>
   )
 

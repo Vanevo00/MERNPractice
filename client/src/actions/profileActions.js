@@ -19,7 +19,7 @@ export const getCurrentProfile = () => async (dispatch) => {
 
 export const createProfile = (profileData, history) => async (dispatch) => {
   try {
-    const response = await axios.post('/api/profile', profileData)
+    await axios.post('/api/profile', profileData)
     history.push('/dashboard')
   } catch(err) {
     dispatch({
