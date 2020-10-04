@@ -17,6 +17,18 @@ export const getCurrentProfile = () => async (dispatch) => {
   }
 }
 
+export const createProfile = (profileData, history) => async (dispatch) => {
+  try {
+    const response = await axios.post('/api/profile', profileData)
+    history.push('/dashboard')
+  } catch(err) {
+    dispatch({
+      type: GET_ERRORS,
+      payload: err.response.data
+    })
+  }
+}
+
 export const setProfileLoading = () => {
   return {
     type: PROFILE_LOADING

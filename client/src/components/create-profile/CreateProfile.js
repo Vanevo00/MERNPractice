@@ -4,6 +4,8 @@ import TextFieldGroup from '../common/TextFieldGroup'
 import SelectListGroup from '../common/SelectListGroup'
 import TextAreaFieldGroup from '../common/TextAreaFieldGroup'
 import InputGroup from '../common/InputGroup'
+import { createProfile } from '../../actions/profileActions'
+import { withRouter } from 'react-router-dom'
 
 const statusOptions = [
   {label: '* Select Professional Status', value: 0},
@@ -15,7 +17,7 @@ const statusOptions = [
   {label: 'teacher', value: 'teacher'},
 ]
 
-const CreateProfile = ({ profile, errors }) => {
+const CreateProfile = ({ profile, errors, history, createProfile }) => {
   const [displaySocialInputs, setDisplaySocialInputs] = useState(false)
   const [inputValues, setInputValues] = useState({
     handle: '',
@@ -35,13 +37,13 @@ const CreateProfile = ({ profile, errors }) => {
 
   const onSubmit = (e) => {
     e.preventDefault()
-    console.log("submit")
+    createProfile(inputValues, history)
   }
 
   const onChange = (e) => {
     setInputValues({
       ...inputValues,
-      [e.target.name]: [e.target.value]
+      [e.target.name]: e.target.value
     })
   }
 
@@ -164,7 +166,7 @@ const CreateProfile = ({ profile, errors }) => {
                 info='Tell us a little bit about yourself '
               />
               <div className='mb-3'>
-                <button onClick={(e) =>  {e.preventDefault(); setDisplaySocialInputs(!displaySocialInputs)}} className='btn btn-light mr-3'>Add Social Network Links</button>
+                <button type='button' onClick={(e) => {setDisplaySocialInputs(!displaySocialInputs)}} className='btn btn-light mr-3'>Add Social Network Links</button>
                 <span className='text-muted'>Optional</span>
               </div>
                 {displaySocialInputs && socialInputs}
@@ -182,4 +184,4 @@ const mapStateToProps = (state) => ({
   errors: state.errors
 })
 
-export default connect(mapStateToProps, {})(CreateProfile)
+export default connect(mapStateToProps, { createProfile })(withRouter(CreateProfile))
