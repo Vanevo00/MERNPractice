@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
-import { getCurrentProfile } from '../../actions/profileActions'
+import { getCurrentProfile, deleteAccount } from '../../actions/profileActions'
 import Spinner from '../common/Spinner'
 import { Link } from 'react-router-dom'
+import ProfileActions from './ProfileActions'
 
-const Dashboard = ({ getCurrentProfile, profileState, auth }) => {
+const Dashboard = ({ getCurrentProfile, deleteAccount, profileState, auth }) => {
   useEffect(() => {
     getCurrentProfile()
   }, [getCurrentProfile])
@@ -12,13 +13,26 @@ const Dashboard = ({ getCurrentProfile, profileState, auth }) => {
   const { user } = auth
   const { profile, loading } = profileState
 
+  const onDeleteClick = () => {
+    deleteAccount()
+  }
+
   let dashboardContent
 
   if (profile === null || loading) {
     dashboardContent = <Spinner/>
   } else {
     if (Object.keys(profile).length > 0) {
-      dashboardContent = <h4>Profile is there</h4>
+      dashboardContent = (
+        <div>
+          <p className='lead text-muted'>
+            Welcome <Link to={`/profile/${profile.handle}`}>{user.name}</Link>
+          </p>
+          <ProfileActions/>
+          <div style={{ marginBottom: '60px' }}/>
+          <button className='btn btn-danger' onClick={onDeleteClick}>Delete my account</button>
+        </div>
+      )
     } else {
       dashboardContent = (
         <div>
@@ -49,4 +63,4 @@ const mapStateToProps = (state) => ({
   auth: state.auth
 })
 
-export default connect(mapStateToProps, { getCurrentProfile })(Dashboard)
+export default connect(mapStateToProps, { getCurrentProfile, deleteAccount })(Dashboard)
