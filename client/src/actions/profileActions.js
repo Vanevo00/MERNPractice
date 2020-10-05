@@ -68,5 +68,16 @@ export const addExperience = (expData, history) => async (dispatch) => {
       payload: err.response.data
     })
   }
+}
 
+export const addEducation = (eduData, history) => async (dispatch) => {
+  try {
+    await axios.post('/api/profile/education', eduData)
+    history.push('/dashboard')
+  } catch(err) {
+    dispatch({
+      type: GET_ERRORS,
+      payload: err.response.data
+    })
+  }
 }
