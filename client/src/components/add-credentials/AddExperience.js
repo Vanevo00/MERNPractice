@@ -3,8 +3,9 @@ import { connect } from 'react-redux'
 import { withRouter, Link } from 'react-router-dom'
 import TextFieldGroup from '../common/TextFieldGroup'
 import TextAreaFieldGroup from '../common/TextAreaFieldGroup'
+import { addExperience } from '../../actions/profileActions'
 
-const AddExperience = ({ profile, errors }) => {
+const AddExperience = ({ profile, errors, addExperience, history }) => {
   const [inputValues, setInputValues] = useState({
     company: '',
     title: '',
@@ -12,14 +13,13 @@ const AddExperience = ({ profile, errors }) => {
     from: '',
     to: '',
     current: false,
-    description: '',
-    errors: {}
+    description: ''
   })
   const [toFieldDisabled, setToFieldDisabled] = useState(false)
 
   const onSubmit = (e) => {
     e.preventDefault()
-    console.log('submit')
+    addExperience(inputValues, history)
   }
 
   const onChange = (e) => {
@@ -117,4 +117,4 @@ const mapStateToProps = (state) => ({
   errors: state.errors
 })
 
-export default connect(mapStateToProps, {})(withRouter(AddExperience))
+export default connect(mapStateToProps, { addExperience })(withRouter(AddExperience))
