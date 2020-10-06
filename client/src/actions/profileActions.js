@@ -81,3 +81,18 @@ export const addEducation = (eduData, history) => async (dispatch) => {
     })
   }
 }
+
+export const deleteExperience = (id) => async(dispatch) => {
+  try {
+    const response = await axios.delete(`/api/profile/experience/${id}`)
+    dispatch({
+      type: GET_PROFILE,
+      payload: response.data
+    })
+  } catch(err) {
+    dispatch({
+      type: GET_ERRORS,
+      payload: err.response.data
+    })
+  }
+}
