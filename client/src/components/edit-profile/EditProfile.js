@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import TextFieldGroup from '../common/TextFieldGroup'
 import SelectListGroup from '../common/SelectListGroup'
 import TextAreaFieldGroup from '../common/TextAreaFieldGroup'
 import InputGroup from '../common/InputGroup'
 import { createProfile, getCurrentProfile } from '../../actions/profileActions'
-import { withRouter } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 
 const statusOptions = [
   {label: '* Select Professional Status', value: 0},
@@ -97,6 +97,7 @@ const CreateProfile = ({ profile, errors, history, createProfile, getCurrentProf
       <div className='container'>
         <div className='row'>
           <div className='col-md-8 m-auto'>
+            <Link to='/dashboard' className='btn btn-light'>Go Back</Link>
             <h1 className='display-4 text-center'>Edit Profile</h1>
             <small className='d-block pb-3'>* = required fields</small>
             <form onSubmit={onSubmit}>
