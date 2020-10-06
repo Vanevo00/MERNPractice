@@ -54,7 +54,7 @@ const CreateProfile = ({ profile, errors, history, createProfile }) => {
         name='twitter'
         icon='fab fa-twitter'
         value={inputValues.twitter}
-        onchange={onChange}
+        onChange={onChange}
         error={errors.twitter}
       />
       <InputGroup
@@ -62,7 +62,7 @@ const CreateProfile = ({ profile, errors, history, createProfile }) => {
         name='facebook'
         icon='fab fa-facebook'
         value={inputValues.facebook}
-        onchange={onChange}
+        onChange={onChange}
         error={errors.facebook}
       />
       <InputGroup
@@ -70,7 +70,7 @@ const CreateProfile = ({ profile, errors, history, createProfile }) => {
         name='linkedin'
         icon='fab fa-linkedin'
         value={inputValues.linkedin}
-        onchange={onChange}
+        onChange={onChange}
         error={errors.linkedin}
       />
       <InputGroup
@@ -78,7 +78,7 @@ const CreateProfile = ({ profile, errors, history, createProfile }) => {
         name='youtube'
         icon='fab fa-youtube'
         value={inputValues.youtube}
-        onchange={onChange}
+        onChange={onChange}
         error={errors.youtube}
       />
       <InputGroup
@@ -86,7 +86,7 @@ const CreateProfile = ({ profile, errors, history, createProfile }) => {
         name='instagram'
         icon='fab fa-instagram'
         value={inputValues.instagram}
-        onchange={onChange}
+        onChange={onChange}
         error={errors.instagram}
       />
     </>
