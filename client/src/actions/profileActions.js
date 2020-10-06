@@ -1,5 +1,12 @@
 import axios from 'axios'
-import { GET_PROFILE, PROFILE_LOADING, GET_ERRORS, CLEAR_CURRENT_PROFILE, SET_CURRENT_USER } from './types'
+import {
+  GET_PROFILE,
+  PROFILE_LOADING,
+  GET_ERRORS,
+  CLEAR_CURRENT_PROFILE,
+  SET_CURRENT_USER,
+  GET_PROFILES
+} from './types'
 
 export const getCurrentProfile = () => async (dispatch) => {
   try {
@@ -108,6 +115,22 @@ export const deleteEducation = (id) => async(dispatch) => {
     dispatch({
       type: GET_ERRORS,
       payload: err.response.data
+    })
+  }
+}
+
+export const getProfiles = () => async(dispatch) => {
+  try {
+    dispatch(setProfileLoading())
+    const response = await axios.get('/api/profile/all')
+    dispatch({
+      type: GET_PROFILES,
+      payload: response.data
+    })
+  } catch(err) {
+    dispatch({
+      type: GET_PROFILES,
+      payload: null
     })
   }
 }
