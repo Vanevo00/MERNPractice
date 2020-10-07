@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import Spinner from '../common/Spinner'
 import { getProfiles } from '../../actions/profileActions'
+import ProfileItem from './ProfileItem'
 
 const Profiles = ({ profile, getProfiles }) => {
   useEffect(() => {
@@ -19,7 +20,9 @@ const Profiles = ({ profile, getProfiles }) => {
     profileItems = <Spinner/>
   } else {
     if (profiles.length) {
-      profileItems = <h1>Profiles are found</h1>
+      profileItems = profiles.map((profile) => (
+        <ProfileItem key={profile._id} profile={profile}/>
+      ))
     } else {
       profileItems = <h4>No profiles found</h4>
     }
