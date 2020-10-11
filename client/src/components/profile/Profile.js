@@ -30,8 +30,8 @@ const Profile = ({ profile, getProfileByHandle, match }) => {
           <div className='col-md-6'/>
         </div>
         <ProfileHeader profile={foundProfile}/>
-        <ProfileAbout/>
-        <ProfileCreds/>
+        <ProfileAbout profile={foundProfile}/>
+        <ProfileCreds education={foundProfile.education} experience={foundProfile.experience}/>
         <ProfileGithub/>
       </div>
     )

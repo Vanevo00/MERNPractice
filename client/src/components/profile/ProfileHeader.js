@@ -36,22 +36,22 @@ const ProfileHeader = ({ profile }) => {
             <p>
               {isEmpty(website) ? null : (
                 <a className="text-white p-2" href={website} target='_blank'>
-                  <i className="fas fa-globe fa-2x"></i>
+                  <i className="fas fa-globe fa-2x"/>
                 </a>
               )}
               {isEmpty(twitter) ? null : (
                 <a className="text-white p-2" href={twitter} target='_blank'>
-                  <i className="fab fa-twitter fa-2x"></i>
+                  <i className="fab fa-twitter fa-2x"/>
                 </a>
               )}
               {isEmpty(facebook) ? null : (
                 <a className="text-white p-2" href={facebook} target='_blank'>
-                  <i className="fab fa-facebook fa-2x"></i>
+                  <i className="fab fa-facebook fa-2x"/>
                 </a>
               )}
               {isEmpty(linkedin) ? null : (
                 <a className="text-white p-2" href={linkedin} target='_blank'>
-                  <i className="fab fa-linkedin fa-2x"></i>
+                  <i className="fab fa-linkedin fa-2x"/>
                 </a>
               )}
               {isEmpty(youtube) ? null : (
