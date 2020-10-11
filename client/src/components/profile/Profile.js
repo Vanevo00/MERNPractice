@@ -4,17 +4,20 @@ import { connect } from 'react-redux'
 import ProfileHeader from './ProfileHeader'
 import ProfileAbout from './ProfileAbout'
 import ProfileCreds from './ProfileCreds'
-import ProfileGithub from './ProfileGithub'
 import Spinner from '../common/Spinner'
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 
-const Profile = ({ profile, getProfileByHandle, match }) => {
+const Profile = ({ profile, getProfileByHandle, match, history }) => {
   const {
     profile: foundProfile,
     loading
   } = profile
 
   let profileContent
+
+  if (foundProfile === null && loading) {
+    history.push('/not-found')
+  }
 
   if (foundProfile === null || loading) {
     profileContent = <Spinner/>
@@ -32,7 +35,6 @@ const Profile = ({ profile, getProfileByHandle, match }) => {
         <ProfileHeader profile={foundProfile}/>
         <ProfileAbout profile={foundProfile}/>
         <ProfileCreds education={foundProfile.education} experience={foundProfile.experience}/>
-        <ProfileGithub/>
       </div>
     )
   }
@@ -60,4 +62,4 @@ const mapStateToProps = (state) => ({
   profile: state.profile
 })
 
-export default connect(mapStateToProps, { getProfileByHandle })(Profile)
+export default connect(mapStateToProps, { getProfileByHandle })(withRouter(Profile))
